@@ -80,12 +80,16 @@ chore: update PostgreSQL base image
 
 ### Pull Request Process
 
-1. Create feature branch from `master`
+1. Create feature branch from `master`: `git checkout -b <type>/<description>`
 2. Make focused, small commits (baby steps)
 3. Open PR with clear description
 4. Ensure all checks pass
 5. Request review
 6. Squash and merge after approval
+7. **After PR is merged:**
+   - Delete the feature branch: `git branch -d <branch> && git push origin --delete <branch>`
+   - Return to master: `git checkout master`
+   - Update local repo: `git pull upstream master`
 
 ## Project Structure
 

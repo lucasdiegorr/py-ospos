@@ -50,8 +50,8 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# OpenSpec changes (planning docs - implement before committing)
-openspec/changes/
+# OpenSpec specs - implement before committing
+openspec/changes/*/specs/
 
 # Skills lock (generated file)
 skills-lock.json

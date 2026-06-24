@@ -78,18 +78,74 @@ chore: update PostgreSQL base image
 - Include body for additional context
 - Use footer for breaking changes or issue references: `BREAKING CHANGE: ...`
 
+### Baby Steps Commits (IMPORTANT)
+
+**CRITICAL: Make small, focused commits. Do NOT bundle multiple features into one commit.**
+
+Good commit examples (one logical change per commit):
+```
+feat(auth): add employee model
+feat(auth): add login endpoint
+feat(auth): add token refresh endpoint
+feat(customer): add customer model
+feat(customer): add customer CRUD endpoints
+feat(item): add item model with categories
+feat(sale): add sale and sale line models
+feat(sale): add cart management endpoints
+```
+
+Bad commit (too large, bundles unrelated changes):
+```
+feat: implement core modules for POS system
+```
+
+**Commit frequency guidelines:**
+- After completing each logical unit (model, endpoint, feature)
+- At minimum: every 1-3 files that form a complete change
+- NEVER commit 30+ files in one commit
+- If a PR has more than 5-10 commits, that's acceptable (small steps)
+- If a PR has only 1 commit with 30+ files, that's a problem
+
 ### Pull Request Process
+
+**IMPORTANT: PRs MUST be created automatically using `gh pr create` as part of the workflow. Do not ask the user to create PRs manually.**
 
 1. Create feature branch from `master`: `git checkout -b <type>/<description>`
 2. Make focused, small commits (baby steps)
-3. Open PR with clear description
-4. Ensure all checks pass
-5. Request review
-6. Squash and merge after approval
-7. **After PR is merged:**
+3. Push branch: `git push -u origin <branch-name>`
+4. Create PR automatically: `gh pr create --title "..." --body "..." --base master`
+5. Ensure all checks pass
+6. Request review
+7. Squash and merge after approval
+8. **After PR is merged:**
    - Delete the feature branch: `git branch -d <branch> && git push origin --delete <branch>`
    - Return to master: `git checkout master`
    - Update local repo: `git pull upstream master`
+
+### Pull Request Template
+
+Use this structure for PR descriptions:
+
+```markdown
+## Why
+
+[Explain the motivation for this change]
+
+## What Changes
+
+- [List specific changes made]
+- [Use bullet points]
+
+## Progress
+
+- Tasks completed: X/Y
+- API endpoints added: [list]
+
+## Testing
+
+- [ ] Unit tests added/updated
+- [ ] Manual testing performed
+```
 
 ## Project Structure
 

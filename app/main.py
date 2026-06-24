@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from app.api.v1.auth import router as auth_router
 from app.api.v1.customer import router as customer_router
 from app.api.v1.employee import router as employee_router
+from app.api.v1.invoice import router as invoice_router
 from app.api.v1.item import router as item_router
 from app.api.v1.quotation import router as quotation_router
 from app.api.v1.sale import router as sale_router
@@ -16,6 +17,7 @@ app = FastAPI(
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(customer_router, prefix="/api/v1")
 app.include_router(employee_router, prefix="/api/v1")
+app.include_router(invoice_router, prefix="/api/v1")
 app.include_router(item_router, prefix="/api/v1")
 app.include_router(quotation_router, prefix="/api/v1")
 app.include_router(sale_router, prefix="/api/v1")

@@ -63,7 +63,7 @@ async def list_items(
     category_id: str | None = None,
     is_service: bool | None = None,
     is_active: bool | None = None,
-    below_reorder_level: bool | False = Query(False),
+    below_reorder_level: bool = Query(False),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
 ) -> list[Item]:
@@ -96,7 +96,7 @@ async def list_items(
     items = list(result.scalars().all())
 
     for item in items:
-        item.is_below_reorder_level = item.is_below_reorder_level
+        item.__dict__['is_below_reorder_level'] = item.is_below_reorder_level
 
     return items
 

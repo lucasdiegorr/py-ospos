@@ -1,4 +1,4 @@
-from sqlalchemy import String, Text
+from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import BaseModel
@@ -14,8 +14,10 @@ class ExpenseCategory(BaseModel):
 class Expense(BaseModel):
     __tablename__ = "expenses"
 
-    category_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
-    employee_id: Mapped[str] = mapped_column(String(36))
+    category_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("expense_categories.id", ondelete="SET NULL"), nullable=True
+    )
+    employee_id: Mapped[str] = mapped_column(String(36), ForeignKey("employees.id", ondelete="CASCADE"))
 
     amount: Mapped[float] = mapped_column(default=0)
     description: Mapped[str | None] = mapped_column(String(500), nullable=True)
@@ -32,7 +34,7 @@ class Expense(BaseModel):
 class CashUp(BaseModel):
     __tablename__ = "cash_ups"
 
-    employee_id: Mapped[str] = mapped_column(String(36))
+    employee_id: Mapped[str] = mapped_column(String(36), ForeignKey("employees.id", ondelete="CASCADE"))
 
     expected_cash: Mapped[float] = mapped_column(default=0)
     actual_cash: Mapped[float] = mapped_column(default=0)

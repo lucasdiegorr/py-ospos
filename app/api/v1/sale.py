@@ -113,6 +113,7 @@ async def add_item_to_cart(
         unit_price=item_data.unit_price if item_data.unit_price > 0 else (item.unit_price if item_data.item_id else 0),
         cost_price=item.cost_price if item_data.item_id else 0,
         discount_percent=item_data.discount_percent,
+        discount_amount=0,
     )
     line.line_total = calculate_line_total(
         line.quantity, line.unit_price, line.discount_percent, line.discount_amount

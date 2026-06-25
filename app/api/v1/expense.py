@@ -117,6 +117,39 @@ async def get_expense_summary(
     }
 
 
+@router.post("/cash-ups", response_model=CashUpResponse, status_code=status.HTTP_201_CREATED)
+async def create_cash_up(
+    cash_up_data: CashUpCreate,
+    db: DbSessionDep,
+    current_user: CurrentUserDep,
+) -> CashUp:
+    variance = cash_up_data.actual_cash - cash_up_data.expected_cash
+
+    cash_up = CashUp(
+        employee_id=current_user.id,
+        expected_cash=cash_up_data.expected_cash,
+        actual_cash=cash_up_data.actual_cash,
+        variance=variance,
+        note=cash_up_data.note,
+    )
+    db.add(cash_up)
+    await db.flush()
+    await db.refresh(cash_up)
+    return cash_up
+
+
+@router.get("/cash-ups", response_model=list[CashUpResponse])
+async def list_cash_ups(
+    db: DbSessionDep,
+    current_user: CurrentUserDep,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100),
+) -> list[CashUp]:
+    query = select(CashUp).offset(skip).limit(limit).order_by(CashUp.created_at.desc())
+    result = await db.execute(query)
+    return list(result.scalars().all())
+
+
 @router.get("/{expense_id}", response_model=ExpenseResponse)
 async def get_expense(
     expense_id: str,
@@ -164,36 +197,3 @@ async def delete_expense(
 
     expense.deleted = True
     await db.flush()
-
-
-@router.post("/cash-ups", response_model=CashUpResponse, status_code=status.HTTP_201_CREATED)
-async def create_cash_up(
-    cash_up_data: CashUpCreate,
-    db: DbSessionDep,
-    current_user: CurrentUserDep,
-) -> CashUp:
-    variance = cash_up_data.actual_cash - cash_up_data.expected_cash
-
-    cash_up = CashUp(
-        employee_id=current_user.id,
-        expected_cash=cash_up_data.expected_cash,
-        actual_cash=cash_up_data.actual_cash,
-        variance=variance,
-        note=cash_up_data.note,
-    )
-    db.add(cash_up)
-    await db.flush()
-    await db.refresh(cash_up)
-    return cash_up
-
-
-@router.get("/cash-ups", response_model=list[CashUpResponse])
-async def list_cash_ups(
-    db: DbSessionDep,
-    current_user: CurrentUserDep,
-    skip: int = Query(0, ge=0),
-    limit: int = Query(50, ge=1, le=100),
-) -> list[CashUp]:
-    query = select(CashUp).offset(skip).limit(limit).order_by(CashUp.created_at.desc())
-    result = await db.execute(query)
-    return list(result.scalars().all())

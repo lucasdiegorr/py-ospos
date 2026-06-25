@@ -217,6 +217,13 @@ All documentation MUST be written in **English**, including:
 - Commit messages
 - PR descriptions
 
+## Code Coverage
+
+The project requires **minimum 90% test coverage**. Before merging any PR:
+1. Run: `pytest --cov --cov-fail-under=90`
+2. If coverage is below 90%, add tests to meet the threshold
+3. Use `pytest --cov --cov-report=term-missing` to see uncovered lines
+
 ## Reference Documents
 
 - OSPOS original project: https://github.com/opensourcepos/opensourcepos

@@ -1,4 +1,4 @@
-from sqlalchemy import String, Text
+from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import BaseModel
@@ -29,7 +29,7 @@ class QuotationLine(BaseModel):
     __tablename__ = "quotation_lines"
 
     quotation_id: Mapped[str] = mapped_column(
-        String(36), foreign_key="quotations.id", ondelete="CASCADE"
+        ForeignKey("quotations.id", ondelete="CASCADE")
     )
 
     item_id: Mapped[str | None] = mapped_column(String(36), nullable=True)

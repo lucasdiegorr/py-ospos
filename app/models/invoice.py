@@ -1,4 +1,4 @@
-from sqlalchemy import String, Text
+from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import BaseModel
@@ -37,7 +37,7 @@ class InvoiceLine(BaseModel):
     __tablename__ = "invoice_lines"
 
     invoice_id: Mapped[str] = mapped_column(
-        String(36), foreign_key="invoices.id", ondelete="CASCADE"
+        ForeignKey("invoices.id", ondelete="CASCADE")
     )
 
     item_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
@@ -58,7 +58,7 @@ class InvoicePayment(BaseModel):
     __tablename__ = "invoice_payments"
 
     invoice_id: Mapped[str] = mapped_column(
-        String(36), foreign_key="invoices.id", ondelete="CASCADE"
+        ForeignKey("invoices.id", ondelete="CASCADE")
     )
 
     payment_type: Mapped[str] = mapped_column(String(20))

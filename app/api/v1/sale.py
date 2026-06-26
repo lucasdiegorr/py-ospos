@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -224,7 +224,7 @@ async def complete_sale(
         db.add(payment)
 
     sale.status = "completed"
-    sale.completed_at = datetime.utcnow().isoformat()
+    sale.completed_at = datetime.now(timezone.utc).isoformat()
     if complete_data.customer_id:
         sale.customer_id = complete_data.customer_id
     if complete_data.comment:
@@ -252,7 +252,7 @@ async def suspend_cart(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No active cart found")
 
     sale.status = "suspended"
-    sale.suspended_at = datetime.utcnow().isoformat()
+    sale.suspended_at = datetime.now(timezone.utc).isoformat()
 
     await db.flush()
     await db.refresh(sale)

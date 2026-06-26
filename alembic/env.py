@@ -1,5 +1,4 @@
 import asyncio
-from collections.abc import AsyncGenerator
 
 from alembic import context
 from sqlalchemy import pool
@@ -7,7 +6,8 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.core.config import settings
-from app.models import base  # noqa: F401
+from app.models.base import Base
+from app.models import employee, customer, item, sale, expense, invoice, quotation, role  # noqa: F401
 
 config = context.config
 
@@ -28,7 +28,7 @@ async def run_migrations() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(connection=connection, target_metadata=None)
+    context.configure(connection=connection, target_metadata=Base.metadata)
 
     with context.begin_transaction():
         context.run_migrations()

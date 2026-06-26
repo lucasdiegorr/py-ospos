@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -50,7 +50,7 @@ async def create_quotation(
 ) -> Quotation:
     expires_at = quotation_data.expires_at
     if expires_at is None:
-        expires_at = (datetime.utcnow() + timedelta(days=30)).isoformat()
+        expires_at = (datetime.now(timezone.utc) + timedelta(days=30)).isoformat()
 
     quotation = Quotation(
         status="draft",

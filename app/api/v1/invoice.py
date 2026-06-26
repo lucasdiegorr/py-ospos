@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -60,7 +60,7 @@ async def create_invoice(
         status="draft",
         employee_id=current_user.id,
         customer_id=invoice_data.customer_id,
-        due_date=invoice_data.due_date or (datetime.utcnow() + timedelta(days=30)).isoformat(),
+        due_date=invoice_data.due_date or (datetime.now(timezone.utc) + timedelta(days=30)).isoformat(),
         comment=invoice_data.comment,
     )
     db.add(invoice)
@@ -181,7 +181,7 @@ async def add_invoice_payment(
         invoice_id=invoice_id,
         payment_type=payment_data.payment_type,
         amount=payment_data.amount,
-        payment_date=payment_data.payment_date or datetime.utcnow().isoformat(),
+        payment_date=payment_data.payment_date or datetime.now(timezone.utc).isoformat(),
         reference_number=payment_data.reference_number,
     )
     db.add(payment)

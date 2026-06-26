@@ -10,11 +10,14 @@ from app.schemas.item import (
     CategoryCreate,
     CategoryResponse,
     ItemAttributeCreate,
+    ItemAttributeResponse,
     ItemBarcodeCreate,
+    ItemBarcodeResponse,
     ItemCreate,
     ItemResponse,
     ItemUpdate,
     KitComponentCreate,
+    KitComponentResponse,
 )
 
 router = APIRouter(prefix="/items", tags=["items"])
@@ -223,3 +226,61 @@ async def get_item_by_barcode(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
 
     return item
+
+
+@router.post("/{item_id}/kits", response_model=KitComponentResponse, status_code=status.HTTP_201_CREATED)
+async def add_kit_component(
+    item_id: str,
+    kit_data: KitComponentCreate,
+    db: DbSessionDep,
+    current_user: CurrentUserDep,
+) -> ItemKit:
+    result = await db.execute(select(Item).where(Item.id == item_id))
+    item = result.scalar_one_or_none()
+
+    if item is None or item.deleted:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
+
+    component_result = await db.execute(select(Item).where(Item.id == kit_data.component_item_id))
+    component = component_result.scalar_one_or_none()
+
+    if component is None or component.deleted:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Component item not found")
+
+    kit = ItemKit(
+        kit_item_id=item_id,
+        component_item_id=kit_data.component_item_id,
+        quantity=kit_data.quantity,
+    )
+    db.add(kit)
+    await db.flush()
+    await db.refresh(kit)
+    return kit
+
+
+@router.get("/{item_id}/kits", response_model=list[KitComponentResponse])
+async def list_kit_components(
+    item_id: str,
+    db: DbSessionDep,
+    current_user: CurrentUserDep,
+) -> list[ItemKit]:
+    result = await db.execute(
+        select(ItemKit).where(ItemKit.kit_item_id == item_id)
+    )
+    return list(result.scalars().all())
+
+
+@router.delete("/kits/{kit_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def remove_kit_component(
+    kit_id: str,
+    db: DbSessionDep,
+    current_user: CurrentUserDep,
+) -> None:
+    result = await db.execute(select(ItemKit).where(ItemKit.id == kit_id))
+    kit = result.scalar_one_or_none()
+
+    if kit is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Kit component not found")
+
+    await db.delete(kit)
+    await db.flush()

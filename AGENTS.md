@@ -193,7 +193,7 @@ docker-compose up -d
 
 ```bash
 # Install dependencies
-pip install -r requirements.txt
+pip install -e ".[dev]"
 
 # Run migrations
 alembic upgrade head

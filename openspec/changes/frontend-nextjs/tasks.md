@@ -36,11 +36,11 @@
 
 ## 5. POS Interface
 
-- [ ] 5.1 Build full-screen POS layout with three-column grid
-- [ ] 5.2 Implement item search component (by name and barcode)
-- [ ] 5.3 Implement cart component (items list, quantities, remove, totals)
-- [ ] 5.4 Implement checkout flow (complete sale, receipt display)
-- [ ] 5.5 Implement suspend/recall sale functionality
+- [x] 5.1 Build full-screen POS layout with three-column grid
+- [x] 5.2 Implement item search component (by name and barcode)
+- [x] 5.3 Implement cart component (items list, quantities, remove, totals)
+- [x] 5.4 Implement checkout flow (complete sale, receipt display)
+- [x] 5.5 Implement suspend/recall sale functionality
 
 ## 6. Testing
 

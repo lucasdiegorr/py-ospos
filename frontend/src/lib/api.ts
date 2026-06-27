@@ -113,9 +113,127 @@ export const api = {
 
   delete: (entity: string, id: string) =>
     request<void>(`/${entity}/${id}`, { method: "DELETE" }),
+
+  // --- POS / Cart methods ---
+  getCart: () =>
+    request<SaleDetail | null>("/sales/cart"),
+
+  createCart: (data?: { customer_id?: string; comment?: string }) =>
+    request<SaleDetail>("/sales/cart", {
+      method: "POST",
+      body: JSON.stringify(data ?? {}),
+    }),
+
+  addToCart: (data: {
+    item_id?: string;
+    item_name?: string;
+    quantity?: number;
+    unit_price?: number;
+    discount_percent?: number;
+  }) =>
+    request<SaleDetail>("/sales/cart/items", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  updateCartItem: (data: {
+    line_id: string;
+    quantity?: number;
+    discount_percent?: number;
+    discount_amount?: number;
+  }) =>
+    request<SaleDetail>("/sales/cart/items", {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+
+  removeFromCart: (lineId: string) =>
+    request<void>(`/sales/cart/items/${lineId}`, { method: "DELETE" }),
+
+  completeSale: (data: {
+    payments: { payment_type: string; amount: number }[];
+    customer_id?: string;
+    comment?: string;
+  }) =>
+    request<SaleDetail>("/sales/cart/complete", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  suspendSale: () =>
+    request<SaleResponse>("/sales/cart/suspend", { method: "POST" }),
+
+  getSuspendedSales: () =>
+    request<SaleDetail[]>("/sales/suspended"),
+
+  recallSale: (saleId: string) =>
+    request<SaleDetail>(`/sales/suspended/${saleId}/recall`, { method: "POST" }),
+
+  lookupBarcode: (barcode: string) =>
+    request<ItemResponse>(`/items/barcode/${encodeURIComponent(barcode)}`),
 };
 
-// Types shared with the backend
+// --- POS types ---
+
+export interface SaleResponse {
+  id: string;
+  customer_id?: string;
+  status: string;
+  employee_id: string;
+  comment?: string;
+  subtotal: number;
+  tax_amount: number;
+  discount_amount: number;
+  total: number;
+  created_at: string;
+  completed_at?: string;
+  suspended_at?: string;
+}
+
+export interface SaleLine {
+  id: string;
+  sale_id: string;
+  item_id?: string;
+  item_name: string;
+  quantity: number;
+  unit_price: number;
+  cost_price: number;
+  discount_percent: number;
+  discount_amount: number;
+  line_total: number;
+}
+
+export interface Payment {
+  id: string;
+  sale_id: string;
+  payment_type: string;
+  amount: number;
+  reference_number?: string;
+}
+
+export interface SaleDetail extends SaleResponse {
+  lines: SaleLine[];
+  payments: Payment[];
+}
+
+export interface ItemResponse {
+  id: string;
+  name: string;
+  description?: string;
+  sku?: string;
+  item_number?: string;
+  category_id?: string;
+  quantity: number;
+  reorder_level: number;
+  cost_price: number;
+  unit_price: number;
+  is_service: boolean;
+  is_serialized: boolean;
+  is_active: boolean;
+  is_below_reorder_level?: boolean;
+}
+
+// Legacy entity types
 export interface Customer {
   id: string;
   first_name: string;

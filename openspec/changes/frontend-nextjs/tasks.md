@@ -44,11 +44,11 @@
 
 ## 6. Testing
 
-- [ ] 6.1 Set up Vitest and React Testing Library with Next.js compatibility
-- [ ] 6.2 Write unit tests for API client (token injection, refresh, error handling)
-- [ ] 6.3 Write component tests for reusable UI components (Button, Input, Modal, Table)
-- [ ] 6.4 Write component tests for login page (validation, success, error states)
-- [ ] 6.5 Write component tests for DataTable (pagination, search, empty state)
+- [x] 6.1 Set up Vitest and React Testing Library with Next.js compatibility
+- [x] 6.2 Write unit tests for API client (token injection, refresh, error handling)
+- [x] 6.3 Write component tests for reusable UI components (Button, Input, Modal, Table)
+- [x] 6.4 Write component tests for login page (validation, success, error states)
+- [x] 6.5 Write component tests for DataTable (pagination, search, empty state)
 - [ ] 6.6 Write integration tests for management CRUD flows
 - [ ] 6.7 Write integration tests for POS cart (add, remove, quantity, totals)
-- [ ] 6.8 Configure CI to run frontend tests on the existing GitHub Actions workflow
+- [x] 6.8 Configure CI to run frontend tests on the existing GitHub Actions workflow

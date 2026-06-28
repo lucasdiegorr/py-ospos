@@ -61,7 +61,7 @@ describe("Customers CRUD integration", () => {
   });
 
   it("opens create modal and submits new customer", async () => {
-    mockFetch.mockResolvedValue(new Response(JSON.stringify([]), { status: 200 }));
+    mockFetch.mockImplementation(() => Promise.resolve(new Response(JSON.stringify([]), { status: 200 })));
 
     await setupCustomersPage();
 

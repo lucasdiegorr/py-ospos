@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["npx", "next", "dev", "-H", "0.0.0.0"]
+CMD ["sh", "-c", "npm run build && npx next start -H 0.0.0.0"]

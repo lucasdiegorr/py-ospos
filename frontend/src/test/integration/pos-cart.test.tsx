@@ -83,7 +83,10 @@ describe("POS cart integration", () => {
 
     await waitFor(() => {
       const createCalls = mockFetch.mock.calls.filter(
-        (c: [string]) => c[0].includes("/sales/cart") && c[1]?.method === "POST"
+        (c) =>
+          typeof c[0] === "string" &&
+          c[0].includes("/sales/cart") &&
+          (c[1] as RequestInit)?.method === "POST"
       );
       expect(createCalls.length).toBeGreaterThanOrEqual(1);
     });

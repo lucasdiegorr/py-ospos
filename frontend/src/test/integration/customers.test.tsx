@@ -87,7 +87,7 @@ describe("Customers CRUD integration", () => {
 
     await waitFor(() => {
       const createCall = mockFetch.mock.calls.find(
-        (c: [string, RequestInit]) => c[1]?.method === "POST"
+        (c) => (c[1] as RequestInit)?.method === "POST"
       );
       expect(createCall).toBeTruthy();
       if (createCall) {

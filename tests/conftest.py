@@ -7,7 +7,26 @@ import uuid
 from sqlalchemy import Boolean
 
 from app.main import app
+import app.core.auth as auth_module
+import app.api.v1.employee as employee_module
 from app.core.auth import get_current_user, get_db
+
+ALL_PERMISSIONS = {
+    "sales.create", "sales.edit", "sales.complete", "sales.suspend", "sales.void",
+    "sales.view_suspended",
+    "customers.read", "customers.create", "customers.update", "customers.delete",
+    "items.read", "items.create", "items.update", "items.delete", "items.manage_categories",
+    "employees.read", "employees.create", "employees.update", "employees.delete",
+    "expenses.read", "expenses.create", "expenses.update", "expenses.delete",
+    "expenses.manage_categories",
+    "invoices.read", "invoices.create", "invoices.update", "invoices.void", "invoices.send",
+    "invoices.manage_credit_notes",
+    "quotations.read", "quotations.create", "quotations.update", "quotations.delete",
+    "quotations.send",
+    "cash_ups.create", "cash_ups.read",
+    "admin.permissions", "admin.roles", "admin.settings",
+    "reports.view",
+}
 
 TABLE_TO_MODEL = {
     'expense_categories': 'ExpenseCategory',
@@ -38,7 +57,6 @@ class MockEmployee:
     first_name = "Test"
     last_name = "User"
     email = "test@example.com"
-    is_admin = True
     is_active = True
 
 
@@ -232,6 +250,16 @@ async def client() -> AsyncClient:
     async def mock_get_db():
         yield mock_session
 
+    orig_get_effective_perms = auth_module.get_effective_permissions
+
+    async def mock_get_effective_permissions(db, employee_id):
+        if employee_id == MockEmployee.id:
+            return ALL_PERMISSIONS
+        return await orig_get_effective_perms(db, employee_id)
+
+    auth_module.get_effective_permissions = mock_get_effective_permissions
+    employee_module.get_effective_permissions = mock_get_effective_permissions
+
     app.dependency_overrides[get_current_user] = mock_get_current_user
     app.dependency_overrides[get_db] = mock_get_db
 
@@ -240,3 +268,5 @@ async def client() -> AsyncClient:
         yield ac
 
     app.dependency_overrides.clear()
+    auth_module.get_effective_permissions = orig_get_effective_perms
+    employee_module.get_effective_permissions = orig_get_effective_perms

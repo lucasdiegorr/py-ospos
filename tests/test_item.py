@@ -11,7 +11,6 @@ class _NonAdminEmployee:
     first_name = "Non"
     last_name = "Admin"
     email = "nonadmin@example.com"
-    is_admin = False
     is_active = True
 
 

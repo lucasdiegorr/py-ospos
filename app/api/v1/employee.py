@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.auth import CurrentUserDep, DbSessionDep, get_effective_permissions
+from app.core.auth import CurrentUserDep, DbSessionDep, get_effective_permissions, require_permission
 from app.core.security import get_password_hash
 from app.models.employee import Employee
 from app.schemas.employee import EmployeeCreate, EmployeeResponse, EmployeeUpdate
@@ -16,14 +16,8 @@ router = APIRouter(prefix="/employees", tags=["employee"])
 async def create_employee(
     employee_data: EmployeeCreate,
     db: DbSessionDep,
-    current_user: CurrentUserDep,
+    _: None = Depends(require_permission("employees.create")),
 ) -> Employee:
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to create employees",
-        )
-
     employee = Employee(
         username=employee_data.username,
         password_hash=get_password_hash(employee_data.password),
@@ -75,11 +69,13 @@ async def update_employee(
     current_user: CurrentUserDep,
 ) -> Employee:
     is_self = current_user.id == employee_id
-    if not current_user.is_admin and not is_self:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to update this employee",
-        )
+    if not is_self:
+        perms = await get_effective_permissions(db, current_user.id)
+        if "employees.update" not in perms:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not authorized to update this employee",
+            )
 
     result = await db.execute(select(Employee).where(Employee.id == employee_id))
     employee = result.scalar_one_or_none()
@@ -100,14 +96,8 @@ async def update_employee(
 async def delete_employee(
     employee_id: str,
     db: DbSessionDep,
-    current_user: CurrentUserDep,
+    _: None = Depends(require_permission("employees.delete")),
 ) -> None:
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to delete employees",
-        )
-
     result = await db.execute(select(Employee).where(Employee.id == employee_id))
     employee = result.scalar_one_or_none()
 

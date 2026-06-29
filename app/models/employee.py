@@ -14,7 +14,6 @@ class Employee(BaseModel):
     email: Mapped[str | None] = mapped_column(String(100), unique=True, nullable=True)
     phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
     deleted: Mapped[bool] = mapped_column(Boolean, default=False)
 
     @property

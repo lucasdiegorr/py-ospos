@@ -25,6 +25,7 @@ class EmployeeUpdate(BaseModel):
 class EmployeeResponse(EmployeeBase):
     id: str
     is_active: bool
+    permissions: list[str] = []
 
     model_config = {"from_attributes": True}
 

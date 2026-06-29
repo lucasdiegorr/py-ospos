@@ -230,10 +230,22 @@ def anyio_backend():
 
 @pytest.fixture
 async def client() -> AsyncClient:
+    from app.models.employee import Employee
+
     async def mock_get_current_user():
         return MockEmployee()
 
     mock_session = MockDbSession()
+    me = MockEmployee()
+    emp = Employee(
+        id=me.id,
+        username=me.username,
+        first_name=me.first_name,
+        last_name=me.last_name,
+        email=me.email,
+        is_active=me.is_active,
+    )
+    mock_session.add(emp)
 
     async def mock_get_db():
         yield mock_session

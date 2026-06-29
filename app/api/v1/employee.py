@@ -35,8 +35,12 @@ async def create_employee(
 @router.get("/me", response_model=EmployeeResponse)
 async def get_current_employee(
     current_user: CurrentUserDep,
-) -> Employee:
-    return current_user
+    db: DbSessionDep,
+) -> EmployeeResponse:
+    permissions = await get_effective_permissions(db, current_user.id)
+    resp = EmployeeResponse.model_validate(current_user)
+    resp.permissions = sorted(permissions)
+    return resp
 
 
 @router.get("/{employee_id}", response_model=EmployeeResponse)
@@ -44,14 +48,17 @@ async def get_employee(
     employee_id: str,
     db: DbSessionDep,
     current_user: CurrentUserDep,
-) -> Employee:
+) -> EmployeeResponse:
     result = await db.execute(select(Employee).where(Employee.id == employee_id))
     employee = result.scalar_one_or_none()
 
     if employee is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Employee not found")
 
-    return employee
+    permissions = await get_effective_permissions(db, employee_id)
+    resp = EmployeeResponse.model_validate(employee)
+    resp.permissions = sorted(permissions)
+    return resp
 
 
 @router.patch("/{employee_id}", response_model=EmployeeResponse)

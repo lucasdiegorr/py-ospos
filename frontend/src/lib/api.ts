@@ -69,13 +69,13 @@ async function request<T>(
 
 export const api = {
   getCurrentUser: () =>
-    request<{ id: string; username: string; is_admin: boolean }>("/employees/me"),
+    request<{ id: string; username: string; permissions: string[] }>("/employees/me"),
 
   login: (username: string, password: string) =>
     request<{
       access_token: string;
       refresh_token: string;
-      employee: { id: string; username: string; is_admin: boolean };
+      employee: { id: string; username: string; permissions: string[] };
     }>("/auth/login", {
       method: "POST",
       body: new URLSearchParams({ username, password }),
@@ -86,7 +86,7 @@ export const api = {
     request<{
       access_token: string;
       refresh_token: string;
-      employee: { id: string; username: string; is_admin: boolean };
+      employee: { id: string; username: string; permissions: string[] };
     }>("/auth/login/json", {
       method: "POST",
       body: JSON.stringify({ username, password }),
@@ -260,8 +260,8 @@ export interface Employee {
   last_name: string;
   email?: string;
   phone?: string;
-  is_admin: boolean;
   is_active: boolean;
+  permissions: string[];
 }
 
 export interface Expense {

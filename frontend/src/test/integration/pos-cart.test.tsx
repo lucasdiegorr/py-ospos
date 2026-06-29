@@ -10,9 +10,10 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/lib/auth-context", () => ({
   useAuth: () => ({
-    user: { id: "1", username: "cashier", isAdmin: false },
+    user: { id: "1", username: "cashier", permissions: ["sales.create", "items.read", "customers.read"] },
     loading: false,
     logout: vi.fn(),
+    can: (perm: string) => perm === "sales.create" || perm === "items.read" || perm === "customers.read",
   }),
   AuthProvider: ({ children }: { children: React.ReactNode }) => children,
 }));

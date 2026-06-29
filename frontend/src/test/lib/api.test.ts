@@ -132,6 +132,21 @@ describe("API client", () => {
     });
   });
 
+  describe("permissions", () => {
+    it("getCurrentUser returns permissions array", async () => {
+      localStorage.setItem("access_token", "token");
+      mockFetch.mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({ id: "1", username: "admin", permissions: ["customers.read", "items.read"] }),
+          { status: 200 }
+        )
+      );
+
+      const user = await api.getCurrentUser();
+      expect(user.permissions).toEqual(["customers.read", "items.read"]);
+    });
+  });
+
   describe("POS methods", () => {
     it("getCart returns null when no active cart", async () => {
       mockFetch.mockResolvedValue(new Response(JSON.stringify(null), { status: 200 }));

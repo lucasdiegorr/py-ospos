@@ -34,17 +34,17 @@
 
 ## 4. PR 4: Frontend — Permission Gating
 
-- [ ] 4.1 Update `User` interface in `auth-context.tsx`: replace `isAdmin: boolean` with `permissions: string[]`
-- [ ] 4.2 Update login and `getCurrentUser` flows to store permissions array
-- [ ] 4.3 Add `can(permission: string): boolean` helper to auth context
-- [ ] 4.4 Create `<Can permission="..." fallback={null}>` component
-- [ ] 4.5 Update `sidebar.tsx`: change nav items from `admin: boolean` to `perm: string`; filter using `can()`
-- [ ] 4.6 Update `bottom-nav.tsx`: apply permission gating to customers, items, expenses links
-- [ ] 4.7 Update dashboard card page to use permission gating instead of `isAdmin`
-- [ ] 4.8 Update `EmployeeResponse` type in `api.ts`: remove `is_admin`, add `permissions`
-- [ ] 4.9 Remove `is_admin` references from login response types in `api.ts`
-- [ ] 4.10 Write tests: login returns permissions, `can()` helper, sidebar rendering with permissions
-- [ ] 4.11 Run `npm run build` and fix any type errors
+- [x] 4.1 Update `User` interface in `auth-context.tsx`: replace `isAdmin: boolean` with `permissions: string[]`
+- [x] 4.2 Update login and `getCurrentUser` flows to store permissions array
+- [x] 4.3 Add `can(permission: string): boolean` helper to auth context
+- [x] 4.4 Create `<Can permission="..." fallback={null}>` component
+- [x] 4.5 Update `sidebar.tsx`: change nav items from `admin: boolean` to `perm: string`; filter using `can()`
+- [x] 4.6 Update `bottom-nav.tsx`: apply permission gating to customers, items, expenses links
+- [x] 4.7 Update dashboard card page to use permission gating instead of `isAdmin`
+- [x] 4.8 Update `EmployeeResponse` type in `api.ts`: remove `is_admin`, add `permissions`
+- [x] 4.9 Remove `is_admin` references from login response types in `api.ts`
+- [x] 4.10 Write tests: login returns permissions, `can()` helper, sidebar rendering with permissions
+- [x] 4.11 Run `npm run build` and fix any type errors
 
 ## 5. PR 5: Frontend — Admin Permission Management Pages
 

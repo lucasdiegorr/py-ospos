@@ -14,7 +14,7 @@ import { api } from "./api";
 interface User {
   id: string;
   username: string;
-  isAdmin: boolean;
+  permissions: string[];
 }
 
 interface AuthContextType {
@@ -22,6 +22,7 @@ interface AuthContextType {
   loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  can: (permission: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -37,14 +38,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
-
     api
       .getCurrentUser()
       .then((u) =>
         setUser({
           id: u.id,
           username: u.username,
-          isAdmin: u.is_admin,
+          permissions: u.permissions ?? [],
         })
       )
       .catch(() => {
@@ -61,10 +61,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (res.refresh_token) {
         localStorage.setItem("refresh_token", res.refresh_token);
       }
+      const u = await api.getCurrentUser();
       setUser({
-        id: res.employee.id,
-        username: res.employee.username,
-        isAdmin: res.employee.is_admin,
+        id: u.id,
+        username: u.username,
+        permissions: u.permissions ?? [],
       });
       router.push("/");
     },
@@ -78,8 +79,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push("/login");
   }, [router]);
 
+  const can = useCallback(
+    (permission: string): boolean => {
+      if (!user) return false;
+      return user.permissions.includes(permission);
+    },
+    [user]
+  );
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, can }}>
       {children}
     </AuthContext.Provider>
   );

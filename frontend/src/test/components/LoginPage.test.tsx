@@ -78,7 +78,7 @@ describe("LoginPage", () => {
         JSON.stringify({
           access_token: "test-token",
           refresh_token: "test-refresh",
-          employee: { id: "1", username: "admin", is_admin: true },
+          employee: { id: "1", username: "admin", permissions: ["admin.roles", "admin.permissions", "admin.settings"] },
         }),
         {
           status: 200,

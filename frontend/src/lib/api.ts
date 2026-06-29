@@ -172,6 +172,43 @@ export const api = {
 
   lookupBarcode: (barcode: string) =>
     request<ItemResponse>(`/items/barcode/${encodeURIComponent(barcode)}`),
+
+  // --- Roles & Permissions ---
+  listRoles: () =>
+    request<RoleBrief[]>("/roles/"),
+
+  getRole: (id: string) =>
+    request<RoleDetail>(`/roles/${id}`),
+
+  createRole: (data: { name: string; description?: string; permission_ids: string[] }) =>
+    request<RoleDetail>("/roles/", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  updateRole: (id: string, data: { name?: string; description?: string; permission_ids?: string[] }) =>
+    request<RoleDetail>(`/roles/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+
+  deleteRole: (id: string) =>
+    request<void>(`/roles/${id}`, { method: "DELETE" }),
+
+  listPermissions: () =>
+    request<Permission[]>("/permissions/"),
+
+  getEmployeeRoles: (employeeId: string) =>
+    request<RoleBrief[]>(`/employees/${employeeId}/roles`),
+
+  assignEmployeeRoles: (employeeId: string, roleIds: string[]) =>
+    request<RoleBrief[]>(`/employees/${employeeId}/roles`, {
+      method: "POST",
+      body: JSON.stringify({ role_ids: roleIds }),
+    }),
+
+  removeEmployeeRole: (employeeId: string, roleId: string) =>
+    request<void>(`/employees/${employeeId}/roles/${roleId}`, { method: "DELETE" }),
 };
 
 // --- POS types ---
@@ -262,6 +299,28 @@ export interface Employee {
   phone?: string;
   is_active: boolean;
   permissions: string[];
+}
+
+export interface Permission {
+  id: string;
+  code: string;
+  name: string;
+  description?: string;
+}
+
+export interface RoleBrief {
+  id: string;
+  name: string;
+  description?: string;
+  permission_count: number;
+}
+
+export interface RoleDetail {
+  id: string;
+  name: string;
+  description?: string;
+  is_default: boolean;
+  permissions: Permission[];
 }
 
 export interface Expense {

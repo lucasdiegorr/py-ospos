@@ -25,7 +25,6 @@ class EmployeeUpdate(BaseModel):
 class EmployeeResponse(EmployeeBase):
     id: str
     is_active: bool
-    is_admin: bool
 
     model_config = {"from_attributes": True}
 

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.auth import CurrentUserDep, DbSessionDep
+from app.core.auth import CurrentUserDep, DbSessionDep, require_permission
 from app.models.customer import Customer
 from app.schemas.customer import CustomerCreate, CustomerResponse, CustomerUpdate
 
@@ -99,14 +99,8 @@ async def update_customer(
 async def delete_customer(
     customer_id: str,
     db: DbSessionDep,
-    current_user: CurrentUserDep,
+    _: None = Depends(require_permission("customers.delete")),
 ) -> None:
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to delete customers",
-        )
-
     result = await db.execute(select(Customer).where(Customer.id == customer_id))
     customer = result.scalar_one_or_none()
 

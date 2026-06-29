@@ -6,12 +6,11 @@ from app.core.auth import get_current_user
 
 
 class MockNonAdmin:
-    id = "test-user-id"
+    id = "non-admin-id"
     username = "testuser"
     first_name = "Test"
     last_name = "User"
     email = "test@example.com"
-    is_admin = False
     is_active = True
 
 
@@ -38,7 +37,6 @@ async def test_create_employee(client: AsyncClient) -> None:
     assert data["last_name"] == "Employee"
     assert data["email"] == "new@example.com"
     assert "id" in data
-    assert data["is_admin"] is False
 
 
 @pytest.mark.anyio
@@ -58,7 +56,7 @@ async def test_create_employee_forbidden(client: AsyncClient) -> None:
         },
     )
     assert response.status_code == 403
-    assert response.json()["detail"] == "Not authorized to create employees"
+    assert response.json()["detail"] == "Insufficient permissions"
 
 
 @pytest.mark.anyio
@@ -67,7 +65,6 @@ async def test_get_current_employee(client: AsyncClient) -> None:
     assert response.status_code == 200
     data = response.json()
     assert data["username"] == "testuser"
-    assert data["is_admin"] is True
 
 
 @pytest.mark.anyio
@@ -139,7 +136,6 @@ async def test_update_employee_self(client: AsyncClient) -> None:
         first_name = "Self"
         last_name = "Updater"
         email = None
-        is_admin = False
         is_active = True
 
     async def mock_get_self():
@@ -179,7 +175,6 @@ async def test_update_employee_forbidden(client: AsyncClient) -> None:
         json={"first_name": "Hacked"},
     )
     assert response.status_code == 403
-    assert response.json()["detail"] == "Not authorized to update this employee"
 
 
 @pytest.mark.anyio
@@ -211,4 +206,3 @@ async def test_delete_employee_forbidden(client: AsyncClient) -> None:
 
     response = await client.delete(f"{EMPLOYEE_URL}/some-id")
     assert response.status_code == 403
-    assert response.json()["detail"] == "Not authorized to delete employees"

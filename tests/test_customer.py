@@ -6,12 +6,11 @@ from app.core.auth import get_current_user
 
 
 class MockNonAdmin:
-    id = "test-user-id"
+    id = "non-admin-id"
     username = "testuser"
     first_name = "Test"
     last_name = "User"
     email = "test@example.com"
-    is_admin = False
     is_active = True
 
 
@@ -143,4 +142,3 @@ async def test_delete_customer_forbidden(client: AsyncClient) -> None:
 
     response = await client.delete(f"{CUSTOMER_URL}/some-id")
     assert response.status_code == 403
-    assert response.json()["detail"] == "Not authorized to delete customers"

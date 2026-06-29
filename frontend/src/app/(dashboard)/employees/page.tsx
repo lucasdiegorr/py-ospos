@@ -28,7 +28,7 @@ export default function EmployeesPage() {
         <div className="px-6 pb-6 space-y-3">
           <div className="flex items-center gap-2 text-sm">
             <Shield size={16} className="text-muted" />
-            <span>{user.isAdmin ? "Administrator" : "Standard User"}</span>
+            <span>{user.permissions.length} permission(s)</span>
           </div>
         </div>
       </Card>

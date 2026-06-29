@@ -8,6 +8,7 @@ from app.api.v1.expense import router as expense_router
 from app.api.v1.invoice import router as invoice_router
 from app.api.v1.item import router as item_router
 from app.api.v1.quotation import router as quotation_router
+from app.api.v1.role import emp_router, perm_router, router as role_router
 from app.api.v1.sale import router as sale_router
 from app.core.exceptions import integrity_error_handler
 
@@ -27,6 +28,9 @@ app.include_router(expense_router, prefix="/api/v1")
 app.include_router(invoice_router, prefix="/api/v1")
 app.include_router(item_router, prefix="/api/v1")
 app.include_router(quotation_router, prefix="/api/v1")
+app.include_router(role_router, prefix="/api/v1")
+app.include_router(perm_router, prefix="/api/v1")
+app.include_router(emp_router, prefix="/api/v1")
 app.include_router(sale_router, prefix="/api/v1")
 
 

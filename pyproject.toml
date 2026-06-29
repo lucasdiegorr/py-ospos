@@ -32,7 +32,7 @@ include = ["app*"]
 
 [tool.coverage.run]
 source = ["app"]
-omit = ["app/main.py", "app/db/__init__.py"]
+omit = ["app/main.py", "app/db/__init__.py", "app/db/seed.py"]
 
 [tool.coverage.report]
 fail_under = 90

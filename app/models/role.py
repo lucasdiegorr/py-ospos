@@ -31,6 +31,7 @@ class RolePermission(BaseModel):
     permission_id: Mapped[str] = mapped_column(String(36), ForeignKey("permissions.id", ondelete="CASCADE"))
 
     role: Mapped[Role] = relationship("Role", back_populates="permissions")
+    permission: Mapped[Permission] = relationship("Permission")
 
 
 class EmployeeRole(BaseModel):

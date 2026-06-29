@@ -48,13 +48,13 @@
 
 ## 5. PR 5: Frontend — Admin Permission Management Pages
 
-- [ ] 5.1 Add `admin.roles` link to sidebar (visible only with that permission)
-- [ ] 5.2 Create `frontend/src/app/admin/roles/page.tsx` — list all roles
-- [ ] 5.3 Create role creation/edit form (modal or page) with permission checkboxes
-- [ ] 5.4 Create role delete confirmation
-- [ ] 5.5 Create `frontend/src/app/admin/employees/[id]/permissions/page.tsx` — view/assign roles and direct permissions
-- [ ] 5.6 Add API methods to `api.ts`: `listRoles`, `createRole`, `updateRole`, `deleteRole`, `getEmployeeRoles`, `assignEmployeeRoles`, `removeEmployeeRole`
+- [x] 5.1 Add `admin.roles` link to sidebar (visible only with that permission)
+- [x] 5.2 Create `frontend/src/app/admin/roles/page.tsx` — list all roles
+- [x] 5.3 Create role creation/edit form (modal or page) with permission checkboxes
+- [x] 5.4 Create role delete confirmation
+- [x] 5.5 Create `frontend/src/app/admin/employees/[id]/permissions/page.tsx` — view/assign roles and direct permissions
+- [x] 5.6 Add API methods to `api.ts`: `listRoles`, `createRole`, `updateRole`, `deleteRole`, `getEmployeeRoles`, `assignEmployeeRoles`, `removeEmployeeRole`
 - [ ] 5.7 Write integration tests for role CRUD flow and employee permission assignment
-- [ ] 5.8 Run `npm run build` and fix any type errors
-- [ ] 5.9 Run `pytest --cov` to verify backend coverage
-- [ ] 5.10 Run `npm test` to verify frontend tests pass
+- [x] 5.8 Run `npm run build` and fix any type errors
+- [x] 5.9 Run `pytest --cov` to verify backend coverage
+- [x] 5.10 Run `npm test` to verify frontend tests pass

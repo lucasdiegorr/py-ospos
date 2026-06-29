@@ -8,6 +8,9 @@
 
 ## User Directives (Highest Priority)
 
+0. **[2026-06-29] NEVER merge PRs — user always merges manually**
+   Do instead: Only create PRs via `gh pr create`, push updates, and notify user. Never click merge or run merge commands.
+
 1. **[2026-06-24] PRs MUST be created automatically via `gh pr create`**
    Do instead: After push, always run `gh pr create --repo lucasdiegorr/py-ospos --base master --head <owner>:<branch-name>` without asking user.
 
@@ -35,6 +38,20 @@
 
 2. **[2026-06-24] Always push to origin after creating branch**
    Do instead: Run `git push -u origin <branch-name>` immediately after `git checkout -b`
+
+## RBAC Implementation Progress
+
+1. **[2026-06-29] PR 23 (migration seed) — OPEN**
+   Do instead: Must merge before PR 24 and PR 25 work (seed data dependency, migration chain).
+
+2. **[2026-06-29] PR 24 (backend API) — OPEN**
+   Do instead: Merge after PR 23. Adds role/permission endpoints.
+
+3. **[2026-06-29] PR 25 (backend refactor) — OPEN, merges last of 3**
+   Do instead: Merge after PR 23. Replaces `is_admin` with `require_permission()`. Migration depends on PR 23's revision `b171b4659a5d`.
+
+4. **[2026-06-29] PR 4 (frontend gating) + PR 5 (admin pages) — NOT STARTED**
+   Do instead: Must wait until 3 backend PRs are merged.
 
 ## Workflow Reminders
 

@@ -26,6 +26,7 @@ class EmployeeResponse(EmployeeBase):
     id: str
     is_active: bool
     is_admin: bool
+    permissions: list[str] = []
 
     model_config = {"from_attributes": True}
 

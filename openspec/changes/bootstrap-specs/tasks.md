@@ -1,9 +1,9 @@
 ## 1. Foundation
 
-- [ ] 1.1 Scaffold monorepo: FastAPI backend, React+TS (Vite) frontend, PostgreSQL schema, docker-compose dev environment
-- [ ] 1.2 Define base domain primitives: money as integer cents, timestamps, idempotency keys
-- [ ] 1.3 Centralize role-based access control helper (attendant/manager/admin) used by all endpoint modules
-- [ ] 1.4 Set up CI: lint, type-check, and test commands for backend and frontend
+- [x] 1.1 Scaffold monorepo: FastAPI backend, React+TS (Vite) frontend, PostgreSQL schema, docker-compose dev environment
+- [x] 1.2 Define base domain primitives: money as integer cents, timestamps, idempotency keys
+- [x] 1.3 Centralize role-based access control helper (attendant/manager/admin) used by all endpoint modules
+- [x] 1.4 Set up CI: lint, type-check, and test commands for backend and frontend
 
 ## 2. auth
 

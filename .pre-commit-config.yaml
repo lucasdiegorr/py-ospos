@@ -40,7 +40,7 @@ repos:
     rev: v2.3.0
     hooks:
       - id: mypy
-        args: [--ignore-missing-imports]
+        args: [--ignore-missing-imports, backend/app]
         pass_filenames: false
         additional_dependencies: []
 

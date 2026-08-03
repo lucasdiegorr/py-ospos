@@ -40,6 +40,10 @@ jobs:
         run: ruff check .
       - name: Type check (mypy)
         run: mypy app
+      - name: Apply migrations
+        env:
+          OSPOS_DATABASE_URL: postgresql+psycopg://ospos:ospos@localhost:5432/ospos
+        run: alembic upgrade head
       - name: Test (pytest)
         run: pytest
         env:

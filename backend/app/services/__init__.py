@@ -1,1 +1,1 @@
-"""Service layer: capability business logic used by API routers."""
+"""Application services (business logic) used by API routers."""

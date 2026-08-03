@@ -10,14 +10,12 @@ Business rules enforced here:
 
 from __future__ import annotations
 
-from passlib.context import CryptContext
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from app.core.security import Role
 from app.models.user import User
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from app.services.passwords import hash_password, verify_password
 
 
 class UserError(Exception):
@@ -44,16 +42,6 @@ class LastActiveAdminError(UserError):
 
 class InvalidCurrentPasswordError(UserError):
     status_code = 400
-
-
-def hash_password(password: str) -> str:
-    """Hash a plaintext password with bcrypt."""
-    return pwd_context.hash(password)
-
-
-def verify_password(password: str, password_hash: str) -> bool:
-    """Verify a plaintext password against a stored bcrypt hash."""
-    return pwd_context.verify(password, password_hash)
 
 
 def _get_user_or_404(db: Session, user_id: int) -> User:

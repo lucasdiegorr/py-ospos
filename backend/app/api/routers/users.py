@@ -100,9 +100,9 @@ class UserOut(BaseModel):
 def create_user_endpoint(
     payload: UserCreate,
     db: DbSession,
-    current: AdminUser,
+    current: ManagerAdminUser,
 ) -> User:
-    """Create a user account (admin only)."""
+    """Create a user account (manager or admin)."""
     try:
         return create_user(
             db,
@@ -148,9 +148,9 @@ def update_user_endpoint(
     user_id: int,
     payload: UserUpdate,
     db: DbSession,
-    current: AdminUser,
+    current: ManagerAdminUser,
 ) -> User:
-    """Edit a user's name, username, role, or password (admin only)."""
+    """Edit a user's name, username, role, or password (manager or admin)."""
     try:
         return update_user(
             db,
@@ -168,9 +168,9 @@ def update_user_endpoint(
 def deactivate_user_endpoint(
     user_id: int,
     db: DbSession,
-    current: AdminUser,
+    current: ManagerAdminUser,
 ) -> User:
-    """Deactivate a user account; refuses to deactivate the last active admin."""
+    """Deactivate a user account (manager or admin); refuses to deactivate the last active admin."""
     try:
         return deactivate_user(db, user_id=user_id)
     except UserError as exc:
@@ -181,9 +181,9 @@ def deactivate_user_endpoint(
 def reactivate_user_endpoint(
     user_id: int,
     db: DbSession,
-    current: AdminUser,
+    current: ManagerAdminUser,
 ) -> User:
-    """Re-enable a deactivated user account (admin only)."""
+    """Re-enable a deactivated user account (manager or admin)."""
     try:
         return reactivate_user(db, user_id=user_id)
     except UserError as exc:
@@ -195,9 +195,9 @@ def reset_password_endpoint(
     user_id: int,
     payload: ResetPassword,
     db: DbSession,
-    current: AdminUser,
+    current: ManagerAdminUser,
 ) -> User:
-    """Admin reset of another user's password."""
+    """Manager or admin reset of another user's password."""
     try:
         return reset_password(db, user_id=user_id, new_password=payload.new_password)
     except UserError as exc:

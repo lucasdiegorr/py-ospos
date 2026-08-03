@@ -275,9 +275,17 @@ def test_edit_user_as_admin_changes_role(client: TestClient, db_session: Session
     assert db_session.get(User, uid).role == "manager"
 
 
-def test_edit_user_as_manager_denied(client: TestClient) -> None:
+def test_edit_user_as_manager_allowed(client: TestClient, db_session: Session) -> None:
     _install_auth_overrides(_manager())
-    response = client.patch("/users/1", json={"name": "X"})
+    user = create_user(db_session, name="Ana", username="ana", password="x", role=Role.ATTENDANT)
+    response = client.patch(f"/users/{user.id}", json={"name": "X"})
+    assert response.status_code == 200
+
+
+def test_edit_user_as_attendant_denied(client: TestClient, db_session: Session) -> None:
+    _install_auth_overrides(_attendant())
+    user = create_user(db_session, name="Ana", username="ana", password="x", role=Role.ATTENDANT)
+    response = client.patch(f"/users/{user.id}", json={"name": "X"})
     assert response.status_code == 403
 
 

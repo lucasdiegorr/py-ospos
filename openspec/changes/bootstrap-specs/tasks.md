@@ -38,12 +38,12 @@
 
 ## 6. inventory
 
-- [ ] 6.1 Implement manual stock entry with optional expiration and movement log
-- [ ] 6.2 Implement sale-driven stock outflow in base units (unit and pack)
-- [ ] 6.3 Implement automatic pack break with base-unit invariant
-- [ ] 6.4 Implement low-stock threshold flag and expiration alert window
-- [ ] 6.5 Implement stock adjustment with reason and chronological movement history
-- [ ] 6.6 Test all inventory scenarios from specs/inventory/spec.md
+- [x] 6.1 Implement manual stock entry with optional expiration and movement log
+- [x] 6.2 Implement sale-driven stock outflow in base units (unit and pack)
+- [x] 6.3 Implement automatic pack break with base-unit invariant
+- [x] 6.4 Implement low-stock threshold flag and expiration alert window
+- [x] 6.5 Implement stock adjustment with reason and chronological movement history
+- [x] 6.6 Test all inventory scenarios from specs/inventory/spec.md
 
 ## 7. payments
 

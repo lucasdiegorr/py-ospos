@@ -12,32 +12,21 @@ import hashlib
 import secrets
 from datetime import timedelta
 
-import bcrypt
 from jose import jwt
 
 from app.core.config import get_settings
 from app.domain.idempotency import utcnow
 from app.models.user import RefreshToken, User
+from app.services.passwords import hash_password, verify_password
 
-
-def hash_password(password: str) -> str:
-    """Hash a plaintext password with bcrypt."""
-    return bcrypt.hashpw(_password_bytes(password), bcrypt.gensalt()).decode("utf-8")
-
-
-def verify_password(password: str, password_hash: str) -> bool:
-    """Return whether the plaintext password matches the stored bcrypt hash."""
-    try:
-        return bcrypt.checkpw(_password_bytes(password), password_hash.encode("utf-8"))
-    except ValueError:
-        # Malformed hash or invalid input: never raise, just fail verification.
-        return False
-
-
-def _password_bytes(password: str) -> bytes:
-    # bcrypt only considers the first 72 bytes; truncate identically on hash
-    # and verify so longer passwords keep working.
-    return password.encode("utf-8")[:72]
+__all__ = [
+    "hash_password",
+    "verify_password",
+    "create_access_token",
+    "generate_refresh_token",
+    "hash_refresh_token",
+    "build_refresh_token",
+]
 
 
 def create_access_token(user: User, *, expires_delta: timedelta | None = None) -> str:

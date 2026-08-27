@@ -97,11 +97,11 @@
 ## 12. sync (cross-cutting)
 
 - [ ] 12.1 Implement durable local outbox for writes (survives restart)
-- [ ] 12.2 Implement idempotency keys on outbox entries and server-side deduplication
+- [x] 12.2 Implement idempotency keys on outbox entries and server-side deduplication
 - [ ] 12.3 Implement sync-on-reconnect push in creation order
-- [ ] 12.4 Implement conflict detection with documented reconciliation rules (stock sync order, price-at-sale preserved)
-- [ ] 12.5 Implement pending-sync count exposure for reporting UI
-- [ ] 12.6 Implement permanent-failure resolution queue for managers
+- [x] 12.4 Implement conflict detection with documented reconciliation rules (stock sync order, price-at-sale preserved)
+- [x] 12.5 Implement pending-sync count exposure for reporting UI
+- [x] 12.6 Implement permanent-failure resolution queue for managers
 - [ ] 12.7 Test all sync scenarios from specs/sync/spec.md
 
 ## 13. Frontend integration

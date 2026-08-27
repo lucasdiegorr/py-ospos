@@ -7,34 +7,34 @@
 
 ## 2. auth
 
-- [ ] 2.1 Implement login endpoint: verify credentials, issue access + refresh tokens, record failed attempts
-- [ ] 2.2 Implement refresh-token rotation and logout (revoke refresh token)
-- [ ] 2.3 Implement lockout after repeated failed attempts with configurable cooldown
-- [ ] 2.4 Encode user id + role in access token claims; reject expired/malformed tokens
-- [ ] 2.5 Test all auth scenarios from specs/auth/spec.md
+- [x] 2.1 Implement login endpoint: verify credentials, issue access + refresh tokens, record failed attempts
+- [x] 2.2 Implement refresh-token rotation and logout (revoke refresh token)
+- [x] 2.3 Implement lockout after repeated failed attempts with configurable cooldown
+- [x] 2.4 Encode user id + role in access token claims; reject expired/malformed tokens
+- [x] 2.5 Test all auth scenarios from specs/auth/spec.md
 
 ## 3. users
 
-- [ ] 3.1 Implement user CRUD (create, edit, deactivate/reactivate, list/search) restricted by role
-- [ ] 3.2 Enforce role rules: only admin manages users; protect last active admin
-- [ ] 3.3 Implement admin password reset and self password change requiring current password
-- [ ] 3.4 Test all users scenarios from specs/users/spec.md
+- [x] 3.1 Implement user CRUD (create, edit, deactivate/reactivate, list/search) restricted by role
+- [x] 3.2 Enforce role rules: manager or admin manages users; protect last active admin
+- [x] 3.3 Implement admin password reset and self password change requiring current password
+- [x] 3.4 Test all users scenarios from specs/users/spec.md
 
 ## 4. customers
 
-- [ ] 4.1 Implement customer registration with minimal data and optional/partial address fields
-- [ ] 4.2 Implement customer search by name/CPF/phone
-- [ ] 4.3 Implement fiado profile (credit limit, interest, due period) with at-least-one-field validation
-- [ ] 4.4 Implement customer purchase history and outstanding fiado balance view
-- [ ] 4.5 Test all customers scenarios from specs/customers/spec.md
+- [x] 4.1 Implement customer registration with minimal data and optional/partial address fields
+- [x] 4.2 Implement customer search by name/CPF/phone
+- [x] 4.3 Implement fiado profile (credit limit, interest, due period) with at-least-one-field validation
+- [x] 4.4 Implement customer purchase history and outstanding fiado balance view
+- [x] 4.5 Test all customers scenarios from specs/customers/spec.md
 
 ## 5. products
 
-- [ ] 5.1 Implement product catalog CRUD with SKU uniqueness and categories
-- [ ] 5.2 Implement packaging model: base unit + pack with quantity and separate price
-- [ ] 5.3 Implement optional expiration attribute on products/stock
-- [ ] 5.4 Implement product search showing price and availability
-- [ ] 5.5 Test all products scenarios from specs/products/spec.md
+- [x] 5.1 Implement product catalog CRUD with SKU uniqueness and categories
+- [x] 5.2 Implement packaging model: base unit + pack with quantity and separate price
+- [x] 5.3 Implement optional expiration attribute on products/stock
+- [x] 5.4 Implement product search showing price and availability
+- [x] 5.5 Test all products scenarios from specs/products/spec.md
 
 ## 6. inventory
 
@@ -47,12 +47,12 @@
 
 ## 7. payments
 
-- [ ] 7.1 Implement payment-method registry (cash/card/PIX/fiado) with enable/disable
-- [ ] 7.2 Implement per-sale payment recording (split payments, card installments)
-- [ ] 7.3 Implement fiado payment linkage: balance increase + credit-limit validation
-- [ ] 7.4 Implement PIX manual registration without gateway integration
-- [ ] 7.5 Implement per-method payment totals per shift
-- [ ] 7.6 Test all payments scenarios from specs/payments/spec.md
+- [x] 7.1 Implement payment-method registry (cash/card/PIX/fiado) with enable/disable
+- [x] 7.2 Implement per-sale payment recording (split payments, card installments)
+- [x] 7.3 Implement fiado payment linkage: balance increase + credit-limit validation
+- [x] 7.4 Implement PIX manual registration without gateway integration
+- [x] 7.5 Implement per-method payment totals per shift
+- [x] 7.6 Test all payments scenarios from specs/payments/spec.md
 
 ## 8. sales
 

@@ -57,13 +57,13 @@
 ## 8. sales
 
 - [ ] 8.1 Implement cart building (unit/pack selection) and cart total computation
-- [ ] 8.2 Implement atomic sale completion: items + payments, stock decrement, shift attribution
-- [ ] 8.3 Implement fiado payment flow within sale (customer required, limit check)
-- [ ] 8.4 Implement optional delivery attachment without freight
-- [ ] 8.5 Implement non-fiscal receipt for Bluetooth thermal printer
-- [ ] 8.6 Implement offline sale completion: local finalization + outbox queue (sync capability)
-- [ ] 8.7 Implement sale search/detail and manager/admin sale cancellation with stock restore
-- [ ] 8.8 Test all sales scenarios from specs/sales/spec.md
+- [x] 8.2 Implement atomic sale completion: items + payments, stock decrement, shift attribution
+- [x] 8.3 Implement fiado payment flow within sale (customer required, limit check)
+- [x] 8.4 Implement optional delivery attachment without freight
+- [x] 8.5 Implement non-fiscal receipt for Bluetooth thermal printer
+- [x] 8.6 Implement offline sale completion: local finalization + outbox queue (sync capability)
+- [x] 8.7 Implement sale search/detail and manager/admin sale cancellation with stock restore
+- [x] 8.8 Test all sales scenarios from specs/sales/spec.md
 
 ## 9. deliveries
 

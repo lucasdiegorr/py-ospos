@@ -7,7 +7,7 @@ import their models from here (or from their own module).
 
 from app.models.cash_register import CashMovement, Shift
 from app.models.customer import Customer
-from app.models.delivery import Delivery
+from app.models.delivery import Delivery, DeliveryStatusEvent
 from app.models.inventory import StockBatch, StockMovement
 from app.models.payment import PaymentMethod
 from app.models.product import Category, Product
@@ -20,6 +20,7 @@ __all__ = [
     "Category",
     "Customer",
     "Delivery",
+    "DeliveryStatusEvent",
     "IdempotencyRecord",
     "OutboxEntry",
     "Payment",

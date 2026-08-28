@@ -84,15 +84,15 @@
 
 ## 11. reporting
 
-- [ ] 11.1 Implement sales-by-period report (day/week/month, range)
-- [ ] 11.2 Implement best-sellers report (quantity + revenue)
-- [ ] 11.3 Implement low-stock/expiring report
-- [ ] 11.4 Implement open-fiados report with oldest-debt
-- [ ] 11.5 Implement cash-flow report (in/out, supply/bleed, balance)
-- [ ] 11.6 Implement margin-per-product report (cost-aware)
-- [ ] 11.7 Implement pending-sync notice reading outbox count from sync capability
-- [ ] 11.8 Enforce report access to managers/admins
-- [ ] 11.9 Test all reporting scenarios from specs/reporting/spec.md
+- [x] 11.1 Implement sales-by-period report (day/week/month, range)
+- [x] 11.2 Implement best-sellers report (quantity + revenue)
+- [x] 11.3 Implement low-stock/expiring report
+- [x] 11.4 Implement open-fiados report with oldest-debt
+- [x] 11.5 Implement cash-flow report (in/out, supply/bleed, balance)
+- [x] 11.6 Implement margin-per-product report (cost-aware)
+- [x] 11.7 Implement pending-sync notice reading outbox count from sync capability
+- [x] 11.8 Enforce report access to managers/admins
+- [x] 11.9 Test all reporting scenarios from specs/reporting/spec.md
 
 ## 12. sync (cross-cutting)
 

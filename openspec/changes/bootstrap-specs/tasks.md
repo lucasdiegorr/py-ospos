@@ -56,7 +56,7 @@
 
 ## 8. sales
 
-- [ ] 8.1 Implement cart building (unit/pack selection) and cart total computation
+- [x] 8.1 Implement cart building (unit/pack selection) and cart total computation
 - [x] 8.2 Implement atomic sale completion: items + payments, stock decrement, shift attribution
 - [x] 8.3 Implement fiado payment flow within sale (customer required, limit check)
 - [x] 8.4 Implement optional delivery attachment without freight
@@ -96,20 +96,20 @@
 
 ## 12. sync (cross-cutting)
 
-- [ ] 12.1 Implement durable local outbox for writes (survives restart)
+- [x] 12.1 Implement durable local outbox for writes (survives restart)
 - [x] 12.2 Implement idempotency keys on outbox entries and server-side deduplication
-- [ ] 12.3 Implement sync-on-reconnect push in creation order
+- [x] 12.3 Implement sync-on-reconnect push in creation order
 - [x] 12.4 Implement conflict detection with documented reconciliation rules (stock sync order, price-at-sale preserved)
 - [x] 12.5 Implement pending-sync count exposure for reporting UI
 - [x] 12.6 Implement permanent-failure resolution queue for managers
-- [ ] 12.7 Test all sync scenarios from specs/sync/spec.md
+- [x] 12.7 Test all sync scenarios from specs/sync/spec.md
 
 ## 13. Frontend integration
 
-- [ ] 13.1 Build responsive app shell (login, role-based navigation) for phone/tablet/monitor
-- [ ] 13.2 Build POS screen: product search, cart, payment split, fiado customer picker
-- [ ] 13.3 Build customer and product management screens
-- [ ] 13.4 Build shift open/close screen with expected-vs-counted reconciliation
-- [ ] 13.5 Build reports screens with pending-sync notice
-- [ ] 13.6 Wire offline handling: local outbox usage + reconnect sync trigger
+- [x] 13.1 Build responsive app shell (login, role-based navigation) for phone/tablet/monitor
+- [x] 13.2 Build POS screen: product search, cart, payment split, fiado customer picker
+- [x] 13.3 Build customer and product management screens
+- [x] 13.4 Build shift open/close screen with expected-vs-counted reconciliation
+- [x] 13.5 Build reports screens with pending-sync notice
+- [x] 13.6 Wire offline handling: local outbox usage + reconnect sync trigger
 - [ ] 13.7 End-to-end test of a full day: open shift, sell (online + offline), close shift, view reports

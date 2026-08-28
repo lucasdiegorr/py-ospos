@@ -100,6 +100,7 @@ def consume_stock(
     quantity: int,
     actor_id: int | None = None,
     reason: str = "sale",
+    commit: bool = True,
 ) -> Product:
     """Sell or otherwise consume ``quantity`` base units of a product.
 
@@ -107,6 +108,9 @@ def consume_stock(
     (each break logged) and the requested units taken from the resulting loose
     stock. Dated batches are drained oldest-first so expiration tracking stays
     truthful. Refuses an outflow that exceeds the total available quantity.
+
+    When ``commit=False`` the mutation stays pending so the caller (e.g. the
+    sales capability) can persist several movements atomically.
     """
     if quantity <= 0:
         raise InvalidQuantityError("quantity must be positive")
@@ -145,8 +149,42 @@ def consume_stock(
             actor_id=actor_id,
         )
     )
-    db.commit()
-    db.refresh(product)
+    if commit:
+        db.commit()
+        db.refresh(product)
+    return product
+
+
+def restore_stock(
+    db: Session,
+    *,
+    product_id: int,
+    quantity: int,
+    as_pack: bool = False,
+    actor_id: int | None = None,
+    commit: bool = True,
+) -> Product:
+    """Put stock back as loose units or whole packs (e.g. on sale cancel)."""
+    if quantity <= 0:
+        raise InvalidQuantityError("quantity must be positive")
+    product = _product_or_404(db, product_id)
+    if as_pack:
+        if not product.pack_quantity:
+            raise InvalidQuantityError(f"Product {product_id} has no pack size")
+        product.packs += quantity
+    else:
+        product.loose_units += quantity
+    db.add(
+        StockMovement(
+            product_id=product_id,
+            delta=quantity,
+            reason="cancel",
+            actor_id=actor_id,
+        )
+    )
+    if commit:
+        db.commit()
+        db.refresh(product)
     return product
 
 

@@ -15,6 +15,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
 from app.domain.idempotency import utcnow
+from app.models.delivery import Delivery
 
 
 class Sale(Base):
@@ -26,6 +27,7 @@ class Sale(Base):
     status: Mapped[str] = mapped_column(
         String(20), nullable=False, default="completed"
     )  # completed | cancelled
+    cancelled_reason: Mapped[str | None] = mapped_column(String(300), nullable=True)
     total_cents: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     idempotency_key: Mapped[str | None] = mapped_column(
         String(64), nullable=True, unique=True, index=True
@@ -39,6 +41,9 @@ class Sale(Base):
     )
     payments: Mapped[list[Payment]] = relationship(
         back_populates="sale", cascade="all, delete-orphan"
+    )
+    delivery: Mapped[Delivery | None] = relationship(
+        "Delivery", cascade="all, delete-orphan", uselist=False
     )
 
 

@@ -67,10 +67,10 @@
 
 ## 9. deliveries
 
-- [ ] 9.1 Implement delivery registration on sale with partial-address optional fields
-- [ ] 9.2 Implement delivery status tracking (pending → in-transit → delivered)
-- [ ] 9.3 Implement delivery list filtered by status/date
-- [ ] 9.4 Test all deliveries scenarios from specs/deliveries/spec.md
+- [x] 9.1 Implement delivery registration on sale with partial-address optional fields
+- [x] 9.2 Implement delivery status tracking (pending → in-transit → delivered)
+- [x] 9.3 Implement delivery list filtered by status/date
+- [x] 9.4 Test all deliveries scenarios from specs/deliveries/spec.md
 
 ## 10. cash-register
 

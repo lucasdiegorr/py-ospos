@@ -1,19 +1,218 @@
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  line-height: 1.4;
   color-scheme: light dark;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
-main {
-  padding: 1rem;
-  max-width: 1200px;
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #8884;
+}
+
+button {
+  cursor: pointer;
+  background: #ececec;
+}
+
+button.primary,
+button.badge {
+  background: #2f81f7;
+  color: white;
+  border-color: #2f81f7;
+}
+
+.app {
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 0.5rem 1rem 2rem;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  position: sticky;
+  top: 0;
+  background: var(--bg, #fff);
+  z-index: 5;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  margin-right: auto;
+}
+
+header .brand,
+header .muted {
+  color: inherit;
+}
+
+nav.tabs {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid #8884;
+  margin-bottom: 0.75rem;
+}
+
+nav.tabs a {
+  text-decoration: none;
+  color: inherit;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px 8px 0 0;
+  white-space: nowrap;
+}
+
+nav.tabs a.active {
+  background: #2f81f7;
+  color: white;
+}
+
+main section {
+  margin-bottom: 1.5rem;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0.4rem 0;
+}
+
+.muted {
+  opacity: 0.65;
+}
+
+.error {
+  color: #d4472f;
+}
+
+/* POS layout: catalog + cart stacks on phones, splits on wide screens */
+.pos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 800px) {
+  .pos {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.product-list,
+.plain-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.product-row,
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #8884;
+  border-radius: 8px;
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.cart-lines,
+.payments {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cart-lines li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.total {
+  font-size: 1.2rem;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 420px;
+}
+
+.login {
+  max-width: 340px;
+  margin: 4rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.login input,
+.stack input,
+.stack select {
   width: 100%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid #8884;
+}
+
+.receipt pre {
+  background: #0001;
+  padding: 0.75rem;
+  border-radius: 8px;
+  white-space: pre-wrap;
+}
+
+.notice {
+  background: #ffe9a8;
+  color: #5a4a00;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+button.link {
+  background: none;
+  border: none;
+  color: inherit;
+  text-decoration: underline;
 }

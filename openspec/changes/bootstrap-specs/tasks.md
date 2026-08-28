@@ -74,13 +74,13 @@
 
 ## 10. cash-register
 
-- [ ] 10.1 Implement shift open with starting float and single-active-shift rule
-- [ ] 10.2 Attribute sales to active shift; require shift open before sale
-- [ ] 10.3 Implement cash supply (suprimento) and bleed (sangria) with reason
-- [ ] 10.4 Implement expected-cash calculation (float + cash sales + supplies − bleeds)
-- [ ] 10.5 Implement shift close with counted cash and difference recording
-- [ ] 10.6 Implement shift summary (payment-method totals, supplies, bleeds, expected/counted/difference)
-- [ ] 10.7 Test all cash-register scenarios from specs/cash-register/spec.md
+- [x] 10.1 Implement shift open with starting float and single-active-shift rule
+- [x] 10.2 Attribute sales to active shift; require shift open before sale
+- [x] 10.3 Implement cash supply (suprimento) and bleed (sangria) with reason
+- [x] 10.4 Implement expected-cash calculation (float + cash sales + supplies − bleeds)
+- [x] 10.5 Implement shift close with counted cash and difference recording
+- [x] 10.6 Implement shift summary (payment-method totals, supplies, bleeds, expected/counted/difference)
+- [x] 10.7 Test all cash-register scenarios from specs/cash-register/spec.md
 
 ## 11. reporting
 

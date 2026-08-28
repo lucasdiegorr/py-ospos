@@ -80,6 +80,9 @@ def _client(db_session: Session, *, role: Role) -> Generator[TestClient, None, N
     from app.api.routers.sales import attendant_or_higher, manager_or_higher
     from app.db import get_db
     from app.main import app
+    from app.services import cash_register
+
+    cash_register.open_shift(db_session, attendant_id=7, float_cents=0)
 
     def override_get_db() -> Generator[Session, None, None]:
         yield db_session
@@ -442,6 +445,32 @@ def test_complete_sale_endpoint(attendant_client: TestClient, db_session: Sessio
     assert response.status_code == 201
     assert response.json()["total_cents"] == 1200
     assert response.json()["status"] == "completed"
+
+
+def test_complete_sale_requires_active_shift(
+    attendant_client: TestClient, db_session: Session
+) -> None:
+    product = make_product(db_session)
+    inventory_service.record_entry(db_session, product_id=product.id, units=10)
+    from app.services import cash_register
+
+    active = cash_register.active_shift(db_session)
+    assert active is not None
+    cash_register.close_shift(
+        db_session,
+        shift_id=active.id,
+        counted_cents=0,
+        actor_id=7,
+        actor_role=Role.MANAGER,
+    )
+    response = attendant_client.post(
+        "/sales",
+        json={
+            "items": [{"product_id": product.id, "quantity": 1, "pack": False}],
+            "payments": [{"method": "cash", "amount_cents": 600}],
+        },
+    )
+    assert response.status_code == 409
 
 
 def test_partial_payment_endpoint_400(attendant_client: TestClient, db_session: Session) -> None:

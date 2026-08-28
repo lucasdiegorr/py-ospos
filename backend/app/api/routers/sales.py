@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 
 from app.core.security import CurrentUser, Role, require_role
 from app.db import get_db
+from app.services import cash_register
 from app.services import sales as service
 from app.services.customers import CustomerNotFound
 from app.services.inventory import InsufficientStockError, UnknownProductError
@@ -179,18 +180,26 @@ def complete(
     db: DbSession,
     user: AttendantDependency,
 ) -> SaleOut:
-    """Complete a sale with its items and payments (any authenticated user)."""
+    """Complete a sale with its items and payments (any authenticated user).
+
+    Online sales are attributed to the active shift; without an open shift the
+    completion is refused (offline sales via the sync handler carry no shift).
+    """
     try:
+        shift = cash_register.require_active_shift(db, body.shift_id)
         sale = service.complete_sale(
             db,
             items=[item.model_dump() for item in body.items],
             payments=[payment.model_dump() for payment in body.payments],
             customer_id=body.customer_id,
-            shift_id=body.shift_id,
+            shift_id=shift.id,
             delivery=body.delivery.model_dump(exclude_none=True) if body.delivery else None,
             idempotency_key=body.idempotency_key,
             actor_id=user.user_id,
         )
+    except cash_register.ShiftError as exc:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
     except (UnknownProductError, CustomerNotFound) as exc:
         db.rollback()
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc

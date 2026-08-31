@@ -6,6 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 COPY pyproject.toml ./
+RUN mkdir -p app && touch app/__init__.py
 RUN pip install --no-cache-dir .
 
 COPY . .

@@ -1,17 +1,28 @@
 """FastAPI application entrypoint."""
 
+import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
+from alembic.config import Config as AlembicConfig
 from fastapi import FastAPI
 from sqlalchemy import select
 
+from alembic import command  # type: ignore[attr-defined]
 from app.api.router import include_capability_routers
 from app.core.config import get_settings
 from app.core.security import Role
 from app.db import SessionLocal
 from app.models.user import User
 from app.services.users import create_user
+
+logger = logging.getLogger(__name__)
+
+
+def _run_migrations() -> None:
+    cfg = AlembicConfig("alembic.ini")
+    cfg.set_main_option("sqlalchemy.url", get_settings().database_url)
+    command.upgrade(cfg, "head")
 
 
 def _seed_admin_user() -> None:
@@ -42,6 +53,7 @@ def _seed_admin_user() -> None:
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncGenerator[None]:
+    _run_migrations()
     _seed_admin_user()
     yield
 

@@ -112,4 +112,4 @@
 - [x] 13.4 Build shift open/close screen with expected-vs-counted reconciliation
 - [x] 13.5 Build reports screens with pending-sync notice
 - [x] 13.6 Wire offline handling: local outbox usage + reconnect sync trigger
-- [ ] 13.7 End-to-end test of a full day: open shift, sell (online + offline), close shift, view reports
+- [x] 13.7 End-to-end test of a full day: open shift, sell (online + offline), close shift, view reports

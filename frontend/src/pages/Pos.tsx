@@ -1,7 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { Plus, Minus, Trash2 } from "lucide-react";
 import { ApiError, api } from "../api";
 import { enqueue, pendingCount } from "../outbox";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface Product {
   id: number;
@@ -214,135 +227,236 @@ export default function Pos() {
 
   if (receipt) {
     return (
-      <div className="receipt">
-        <h2>Venda finalizada</h2>
-        <p>
-          {receipt.sale_id
-            ? `Venda #${receipt.sale_id}`
-            : `Venda local #${
-                receipt.sale_id
-              } — será sincronizada (${pendingCount()} pendente(s))`}
-        </p>
-        <pre>{receipt.lines.join("\n")}</pre>
-        <button onClick={() => setReceipt(null)}>Nova venda</button>
-      </div>
+      <Card className="mx-auto max-w-lg">
+        <CardHeader>
+          <CardTitle>Venda finalizada</CardTitle>
+          <CardDescription>
+            {receipt.sale_id
+              ? `Venda #${receipt.sale_id}`
+              : `Venda local — será sincronizada (${pendingCount()} pendente(s))`}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <pre className="whitespace-pre-wrap rounded-md bg-muted p-4 font-mono text-sm text-foreground">
+            {receipt.lines.join("\n")}
+          </pre>
+          <Button onClick={() => setReceipt(null)} className="w-full">
+            Nova venda
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="pos">
-      <section className="pos-catalog">
-        <h2>Produtos</h2>
-        <input
-          placeholder="Buscar produto ou SKU"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          autoFocus
-        />
-        <ul className="product-list">
-          {filtered.map((p) => (
-            <li key={p.id} className="product-row">
-              <div>
-                <strong>{p.name}</strong>
-                <span className="muted">
-                  {money(p.unit_price_cents)} · estoque {p.available_quantity}
-                </span>
-              </div>
-              <div className="row-actions">
-                <button onClick={() => addLine(p, false)}>+ un</button>
-                {p.pack_price_cents != null && (
-                  <button onClick={() => addLine(p, true)}>
-                    + pack ({money(p.pack_price_cents)})
-                  </button>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
+    <div className="grid gap-4 lg:grid-cols-3">
+      <section className="lg:col-span-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Produtos</CardTitle>
+            <Input
+              placeholder="Buscar produto ou SKU"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              autoFocus
+            />
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {filtered.map((p) => (
+                <Card key={p.id} className="p-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="font-medium leading-tight">{p.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {money(p.unit_price_cents)} · estoque{" "}
+                        {p.available_quantity}
+                      </p>
+                    </div>
+                    {p.pack_price_cents != null && (
+                      <Badge variant="outline">c/ pack</Badge>
+                    )}
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Button size="sm" onClick={() => addLine(p, false)}>
+                      <Plus className="mr-1 h-4 w-4" /> un
+                    </Button>
+                    {p.pack_price_cents != null && (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => addLine(p, true)}
+                      >
+                        pack ({money(p.pack_price_cents)})
+                      </Button>
+                    )}
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </section>
 
-      <section className="pos-cart">
-        <h2>Carrinho</h2>
-        <ul className="cart-lines">
-          {cart.map((line, i) => (
-            <li key={i}>
-              <span>
-                {line.pack ? "[PACK] " : ""}
-                {line.name} x{line.qty}
-              </span>
-              <span>{money(line.unit_price * line.qty)}</span>
-              <span className="row-actions">
-                <button onClick={() => bump(line, -1)}>−</button>
-                <button onClick={() => bump(line, 1)}>+</button>
-              </span>
-            </li>
-          ))}
-        </ul>
-        <p className="total">
-          Total: <strong>{money(total)}</strong>
-        </p>
-
-        <h3>Pagamento</h3>
-        <select value={method} onChange={(e) => setMethod(e.target.value)}>
-          {methods.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.name}
-            </option>
-          ))}
-        </select>
-        <p className="muted">
-          {remaining > 0
-            ? `Restam ${money(remaining)}`
-            : "Valor já coberto pelo pagamento."}
-        </p>
-        <button onClick={addPayment} disabled={remaining <= 0 || busy}>
-          Adicionar {method} {money(Math.max(remaining, 0))}
-        </button>
-
-        {method === "fiado" && (
-          <div className="customer-picker">
-            <input
-              placeholder="Buscar cliente (fiado)"
-              value={customerQuery}
-              onChange={(e) => setCustomerQuery(e.target.value)}
-            />
-            <ul>
-              {customers.map((c) => (
-                <li key={c.id}>
-                  <button onClick={() => setCustomer(c)}>
-                    {c.name} — saldo {money(c.outstanding_balance_cents)}
-                  </button>
+      <section>
+        <Card className="lg:sticky lg:top-20">
+          <CardHeader>
+            <CardTitle>Carrinho</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <ul className="space-y-2">
+              {cart.map((line, i) => (
+                <li
+                  key={i}
+                  className="flex items-center justify-between gap-2 rounded-md border border-border p-2"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">
+                      {line.pack ? "[PACK] " : ""}
+                      {line.name} x{line.qty}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {money(line.unit_price * line.qty)}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => bump(line, -1)}
+                      aria-label="Diminuir quantidade"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => bump(line, 1)}
+                      aria-label="Aumentar quantidade"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </li>
               ))}
+              {cart.length === 0 && (
+                <li className="py-6 text-center text-sm text-muted-foreground">
+                  Carrinho vazio
+                </li>
+              )}
             </ul>
-            {customer && (
-              <p>
-                Cliente fiado: <strong>{customer.name}</strong>{" "}
-                <button onClick={() => setCustomer(null)}>trocar</button>
+
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Total</span>
+              <span className="text-2xl font-semibold">{money(total)}</span>
+            </div>
+
+            <Separator />
+
+            <div className="space-y-2">
+              <p className="font-medium">Pagamento</p>
+              <select
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={method}
+                onChange={(e) => setMethod(e.target.value)}
+              >
+                {methods.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
+              <p className="text-sm text-muted-foreground">
+                {remaining > 0
+                  ? `Restam ${money(remaining)}`
+                  : "Valor já coberto pelo pagamento."}
               </p>
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={addPayment}
+                disabled={remaining <= 0 || busy}
+              >
+                Adicionar {method} {money(Math.max(remaining, 0))}
+              </Button>
+            </div>
+
+            {method === "fiado" && (
+              <div className="space-y-2">
+                <Input
+                  placeholder="Buscar cliente (fiado)"
+                  value={customerQuery}
+                  onChange={(e) => setCustomerQuery(e.target.value)}
+                />
+                <ul className="space-y-1">
+                  {customers.map((c) => (
+                    <li key={c.id}>
+                      <Button
+                        className="w-full justify-start"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setCustomer(c)}
+                      >
+                        {c.name} — saldo {money(c.outstanding_balance_cents)}
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+                {customer && (
+                  <p className="text-sm">
+                    Cliente fiado: <strong>{customer.name}</strong>{" "}
+                    <button
+                      className="text-muted-foreground underline"
+                      onClick={() => setCustomer(null)}
+                    >
+                      trocar
+                    </button>
+                  </p>
+                )}
+              </div>
             )}
-          </div>
-        )}
 
-        <ul className="payments">
-          {payments.map((p, i) => (
-            <li key={i}>
-              {p.method}: {money(p.amount_cents)}
-            </li>
-          ))}
-        </ul>
+            <div className="space-y-1">
+              {payments.map((p, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between rounded-md bg-muted px-3 py-2 text-sm"
+                >
+                  <span>
+                    {p.method}: {money(p.amount_cents)}
+                  </span>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() =>
+                      setPayments((list) => list.filter((_, idx) => idx !== i))
+                    }
+                    aria-label="Remover pagamento"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
 
-        {error && <p className="error">{error}</p>}
-        <button
-          className="primary"
-          onClick={complete}
-          disabled={paid !== total || total <= 0 || busy}
-        >
-          Finalizar venda
-        </button>
-        <p className="muted">
-          <Link to="/shift">Precisa abrir o caixa? Ir para Caixa</Link>
-        </p>
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            <Button
+              className="w-full"
+              onClick={complete}
+              disabled={paid !== total || total <= 0 || busy}
+            >
+              {busy ? "Finalizando..." : "Finalizar venda"}
+            </Button>
+            <p className="text-center text-sm text-muted-foreground">
+              <Link to="/shift">Precisa abrir o caixa? Ir para Caixa</Link>
+            </p>
+          </CardContent>
+        </Card>
       </section>
     </div>
   );

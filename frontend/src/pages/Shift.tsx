@@ -1,5 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { ApiError, api } from "../api";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 
 const MONEY = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -106,124 +118,223 @@ export default function Shift() {
     }
   }
 
-  if (loading) return <p>Carregando…</p>;
+  if (loading) return <p className="text-muted-foreground">Carregando…</p>;
 
   if (!summary) {
     return (
-      <section>
-        <h2>Abrir caixa</h2>
-        <form className="stack" onSubmit={openShift}>
-          <input
-            placeholder="Fundo de troco (centavos, ex 10000 = R$ 100)"
-            inputMode="numeric"
-            value={floatCents}
-            onChange={(e) => setFloatCents(e.target.value)}
-            required
-          />
-          {error && <p className="error">{error}</p>}
-          <button>Abrir caixa</button>
+      <Card className="mx-auto max-w-md">
+        <CardHeader>
+          <CardTitle>Abrir caixa</CardTitle>
+          <CardDescription>
+            Registre o fundo de troco para iniciar o turno.
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={openShift}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="float">Fundo de troco (centavos)</Label>
+              <Input
+                id="float"
+                placeholder="Ex.: 10000 = R$ 100"
+                inputMode="numeric"
+                value={floatCents}
+                onChange={(e) => setFloatCents(e.target.value)}
+                required
+              />
+            </div>
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <Button type="submit" className="w-full">
+              Abrir caixa
+            </Button>
+          </CardContent>
         </form>
-      </section>
+      </Card>
     );
   }
 
   if (summary.status === "closed") {
     return (
-      <section>
-        <h2>Caixa #{summary.id} — Fechado</h2>
-        <SummaryTable summary={summary} />
-        <button onClick={() => void load()}>Atualizar</button>
-      </section>
+      <Card>
+        <CardHeader>
+          <CardTitle>Caixa #{summary.id} — Fechado</CardTitle>
+          <CardDescription>Resumo de fechamento</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <SummaryTable summary={summary} />
+          <Button variant="outline" onClick={() => void load()}>
+            Atualizar
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="shift">
-      <section>
-        <h2>Caixa #{summary.id} (aberto)</h2>
-        <SummaryTable summary={summary} />
-      </section>
+    <div className="grid gap-4 lg:grid-cols-3">
+      <Card className="lg:col-span-2">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Caixa #{summary.id}</CardTitle>
+              <CardDescription>Resumo do turno ativo</CardDescription>
+            </div>
+            <Badge>Aberto</Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <SummaryTable summary={summary} />
+        </CardContent>
+      </Card>
 
-      <section>
-        <h3>Suprimento / Sangria</h3>
-        <form className="stack" onSubmit={addMovement}>
-          <select
-            value={movementType}
-            onChange={(e) =>
-              setMovementType(e.target.value as "supply" | "bleed")
-            }
-          >
-            <option value="supply">Suprimento</option>
-            <option value="bleed">Sangria</option>
-          </select>
-          <input
-            placeholder="Valor (centavos)"
-            inputMode="numeric"
-            value={movementAmount}
-            onChange={(e) => setMovementAmount(e.target.value)}
-            required
-          />
-          <input
-            placeholder="Motivo"
-            value={movementReason}
-            onChange={(e) => setMovementReason(e.target.value)}
-            required
-          />
-          <button>Registrar</button>
-        </form>
-      </section>
+      <div className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Suprimento / Sangria</CardTitle>
+          </CardHeader>
+          <form onSubmit={addMovement}>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="movement-type">Tipo</Label>
+                <select
+                  id="movement-type"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  value={movementType}
+                  onChange={(e) =>
+                    setMovementType(e.target.value as "supply" | "bleed")
+                  }
+                >
+                  <option value="supply">Suprimento</option>
+                  <option value="bleed">Sangria</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="movement-amount">Valor (centavos)</Label>
+                <Input
+                  id="movement-amount"
+                  inputMode="numeric"
+                  value={movementAmount}
+                  onChange={(e) => setMovementAmount(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="movement-reason">Motivo</Label>
+                <Input
+                  id="movement-reason"
+                  value={movementReason}
+                  onChange={(e) => setMovementReason(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                Registrar
+              </Button>
+            </CardContent>
+          </form>
+        </Card>
 
-      <section>
-        <h3>Fechar caixa</h3>
-        <form className="stack" onSubmit={closeShift}>
-          <input
-            placeholder="Dinheiro contado (centavos)"
-            inputMode="numeric"
-            value={countedCents}
-            onChange={(e) => setCountedCents(e.target.value)}
-            required
-          />
-          {error && <p className="error">{error}</p>}
-          <button>Fechar caixa</button>
-        </form>
-      </section>
+        <Card>
+          <CardHeader>
+            <CardTitle>Fechar caixa</CardTitle>
+            <CardDescription>
+              Informe o valor contado para fechar o turno.
+            </CardDescription>
+          </CardHeader>
+          <form onSubmit={closeShift}>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="counted">Dinheiro contado (centavos)</Label>
+                <Input
+                  id="counted"
+                  inputMode="numeric"
+                  value={countedCents}
+                  onChange={(e) => setCountedCents(e.target.value)}
+                  required
+                />
+              </div>
+              {summary.difference_cents != null && (
+                <div
+                  className={
+                    summary.difference_cents < 0
+                      ? "text-destructive"
+                      : "text-foreground"
+                  }
+                >
+                  Diferença atual: {money(summary.difference_cents)}
+                </div>
+              )}
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+              <Button type="submit" className="w-full">
+                Fechar caixa
+              </Button>
+            </CardContent>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 }
 
 function SummaryTable({ summary }: { summary: ShiftSummary }) {
+  const differenceClass =
+    summary.difference_cents == null
+      ? "text-muted-foreground"
+      : summary.difference_cents < 0
+        ? "text-destructive"
+        : "text-foreground";
+
   return (
-    <table>
+    <table className="w-full text-sm">
       <tbody>
-        <tr>
-          <td>Fundo</td>
-          <td>{money(summary.float_cents)}</td>
+        <tr className="border-b border-border">
+          <td className="py-2 text-muted-foreground">Fundo</td>
+          <td className="py-2 text-right font-medium">
+            {money(summary.float_cents)}
+          </td>
         </tr>
         {Object.entries(summary.payment_totals).map(([method, total]) => (
-          <tr key={method}>
-            <td>Vendas ({method})</td>
-            <td>{money(total)}</td>
+          <tr key={method} className="border-b border-border">
+            <td className="py-2 text-muted-foreground">Vendas ({method})</td>
+            <td className="py-2 text-right font-medium">{money(total)}</td>
           </tr>
         ))}
-        <tr>
-          <td>Suprimentos</td>
-          <td>{money(summary.supplies_cents)}</td>
+        <tr className="border-b border-border">
+          <td className="py-2 text-muted-foreground">Suprimentos</td>
+          <td className="py-2 text-right font-medium">
+            {money(summary.supplies_cents)}
+          </td>
+        </tr>
+        <tr className="border-b border-border">
+          <td className="py-2 text-muted-foreground">Sangrias</td>
+          <td className="py-2 text-right font-medium">
+            {money(summary.bleeds_cents)}
+          </td>
+        </tr>
+        <tr className="border-b border-border">
+          <td className="py-2 text-muted-foreground">Esperado</td>
+          <td className="py-2 text-right font-medium">
+            {money(summary.expected_cents)}
+          </td>
+        </tr>
+        <tr className="border-b border-border">
+          <td className="py-2 text-muted-foreground">Contado</td>
+          <td className="py-2 text-right font-medium">
+            {money(summary.counted_cents)}
+          </td>
         </tr>
         <tr>
-          <td>Sangrias</td>
-          <td>{money(summary.bleeds_cents)}</td>
-        </tr>
-        <tr>
-          <td>Esperado</td>
-          <td>{money(summary.expected_cents)}</td>
-        </tr>
-        <tr>
-          <td>Contado</td>
-          <td>{money(summary.counted_cents)}</td>
-        </tr>
-        <tr>
-          <td>Diferença</td>
-          <td>{money(summary.difference_cents)}</td>
+          <td className="py-2 text-muted-foreground">Diferença</td>
+          <td className={`py-2 text-right font-medium ${differenceClass}`}>
+            {money(summary.difference_cents)}
+          </td>
         </tr>
       </tbody>
     </table>

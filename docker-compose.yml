@@ -19,6 +19,8 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
       OSPOS_DATABASE_URL: postgresql+psycopg://ospos:ospos@db:5432/ospos
       OSPOS_JWT_SECRET: change-me-in-production
@@ -27,6 +29,9 @@ services:
       OSPOS_REFRESH_TOKEN_EXPIRE_DAYS: 7
       OSPOS_LOGIN_MAX_ATTEMPTS: 5
       OSPOS_LOGIN_LOCKOUT_MINUTES: 15
+      OSPOS_ADMIN_USERNAME: admin
+      OSPOS_ADMIN_PASSWORD: change-me-in-production
+      OSPOS_ADMIN_NAME: Administrator
     depends_on:
       db:
         condition: service_healthy

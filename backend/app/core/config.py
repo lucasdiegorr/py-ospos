@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     login_max_attempts: int = 5
     login_lockout_minutes: int = 15
 
+    admin_username: str | None = None
+    admin_password: str | None = None
+    admin_name: str | None = None
+
 
 @lru_cache
 def get_settings() -> Settings:

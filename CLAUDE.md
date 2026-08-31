@@ -48,3 +48,33 @@ The hook in `.claude/settings.local.json` **blocks** (deny) `Write`/`Edit` and `
 
 - `pre-commit` hooks installed (`pre-commit install` + `pre-commit install --hook-type pre-push`).
 - Git hooks and secret scans are triggered automatically by `.claude/settings.local.json`.
+
+## Running the stack with Docker Compose
+
+The full stack (PostgreSQL + FastAPI backend + React frontend) can be started with:
+
+```bash
+docker compose up --build
+```
+
+This brings up three services:
+
+| Service  | Port  | Description                              |
+|----------|-------|------------------------------------------|
+| `db`       | 5432  | PostgreSQL 16 (with persistent volume) |
+| `backend`  | 8000  | FastAPI via Uvicorn                    |
+| `frontend` | 80    | React SPA served by Nginx              |
+
+The frontend is served at `http://localhost`, the API at `http://localhost:8000`.
+
+Override any of the `OSPOS_*` environment variables from `.env.example` by exporting them before `docker compose up` or by using an `env_file` directive.
+
+Common commands:
+
+```bash
+docker compose up -d            # start in background
+docker compose down             # stop and remove containers (keeps volume)
+docker compose down -v          # stop and remove containers + DB volume
+docker compose logs -f backend  # tail backend logs
+docker compose exec backend bash
+```
